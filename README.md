@@ -7,6 +7,6 @@
   <li>jika nama folder pada laravel masih app dapat di rename menjadi App</li>
   <li>membuat model dengan cmd php artisan make:model example-model</li>
   <li>membuat controller dengan cmd php artisan make:controller example-controller</li>
-  <li>jikaa API laravel pada routes sudah tersedia maka dapat langsung memanggil controller yang terlah di buat
+  <li>jika API laravel pada routes sudah tersedia maka dapat langsung memanggil controller yang terlah di buat
   namun jika belum ada dapat menulis cmd php artisan install:api</li>
 </ol>
