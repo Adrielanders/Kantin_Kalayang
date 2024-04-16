@@ -6,6 +6,6 @@ use App\Http\Controllers\ControllerKalayang;
 
 
 
-Route::post('/viewallmenu',[ControllerKalayang::class,'viewmenu']);
+Route::post('/viewmenu',[ControllerKalayang::class,'viewmenu']);
 Route::post('/savemenu',[ControllerKalayang::class,'makemenu']);
 
