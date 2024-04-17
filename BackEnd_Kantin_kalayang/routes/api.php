@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerKalayang;
 
 
-//Menu Kalayang
+//Menu Kalayang CRUD
 Route::post('/viewmenu',[ControllerKalayang::class,'viewmenu']);
 Route::post('/savemenu',[ControllerKalayang::class,'makemenu']);
 Route::post('/updatemenu',[ControllerKalayang::class,'updatemenu']);
