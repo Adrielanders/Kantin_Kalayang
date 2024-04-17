@@ -12,3 +12,6 @@ Route::post('/updatemenu',[ControllerKalayang::class,'updatemenu']);
 Route::post('/deletemenu',[ControllerKalayang::class,'deletemenu']);
 Route::post('/viewonemenu',[ControllerKalayang::class,'viewonemenu']);
 
+//Transaksi Kalayang CRUD
+Route::post('/viewtransaksi',[ControllerKalayang::class,'viewtransaksi']);
+Route::post('/savetransaksi',[ControllerKalayang::class,'savetransaksi']);

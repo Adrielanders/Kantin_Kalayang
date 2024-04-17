@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ModelKalayangMenu;
+use App\Models\ModelKalayangTransaksi;
 use Illuminate\Cache\Repository;
 
 class ControllerKalayang extends Controller
@@ -44,13 +45,13 @@ class ControllerKalayang extends Controller
             $sts = false;
         }
 
-        return response()->json(['message' => $msg, 'status' => $sts], 201);
+        return response()->json(['message' => $msg, 'status' => $sts], 200);
     }
 
     public function viewmenu()
     {
-        $oneuser = ModelKalayangMenu::all();
-        return response()->json(['message' => 'success', 'data' => $oneuser], 200);
+        $allmenu = ModelKalayangMenu::all();
+        return response()->json(['message' => 'success', 'data' => $allmenu], 200);
     }
 
     public function updatemenu(Request $request)
@@ -108,15 +109,62 @@ class ControllerKalayang extends Controller
         $id_menu = $request->post('id_menu');
         $menu = ModelKalayangMenu::find($id_menu);
 
-        if(!$menu){
+        if (!$menu) {
             return response()->json(['message' => 'Data Not Found'], 404);
         } else {
             return response()->json(['message' => 'success', 'data' => $menu], 200);
         }
-       
     }
 
     //Controller Transaksi
-    public function viewtransaksi(){
+    public function viewtransaksi()
+    {
+        $alltransaksi = ModelKalayangTransaksi::all();
+        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
+    }
+
+    public function savetransaksi(Request $request)
+    {
+        $id_menu = $request->post('id_menu');
+        $nomor_meja = $request->post('nomor_meja');
+        $status_pesanan = $request->post('status_pesanan');
+        $catatan_pemesan = $request->post('catatan_pemesan');
+        $ekstra_menu = $request->post('ekstra_menu');
+
+        $transaction = new ModelKalayangTransaksi();
+        $transaction->id_menu = $id_menu;
+        $transaction->id_order = $this->generateUniqueNumber();
+        $transaction->nomor_meja = $nomor_meja;
+        $transaction->status_pesanan = $status_pesanan;
+        $transaction->catatan_pemesan = $catatan_pemesan;
+        $transaction->ekstra_menu = $ekstra_menu;
+        $transaction->save();
+
+        if ($transaction) {
+            $msg = "Data berhasil di simpan";
+            $sts = true;
+        } else {
+            $msg = "Data gagal di simpan";
+            $sts = false;
+        }
+
+        return response()->json(['message' => $msg, 'status' => $sts], 200);
+    }
+
+
+    //Controller Privaate Function
+    private function generateUniqueNumber()
+    {
+
+
+        $date = date('dmy');
+        $lastNumber = ModelKalayangTransaksi::where('id_order', 'like', '#M' . $date . '%')->max('id_order');
+        $lastSequentialNumber = $lastNumber ? intval(substr($lastNumber, 10)) : 0;
+        if (!$lastNumber) {
+            $nextSequentialNumber = 1;
+        } else {
+            $nextSequentialNumber = $lastSequentialNumber + 1;
+        }
+        return '#M' . $date . sprintf('%04d', $nextSequentialNumber);
     }
 }
