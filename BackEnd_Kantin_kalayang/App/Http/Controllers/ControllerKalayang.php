@@ -117,4 +117,6 @@ class ControllerKalayang extends Controller
     }
 
     //Controller Transaksi
+    public function viewtransaksi(){
+    }
 }
