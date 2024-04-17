@@ -15,3 +15,4 @@ Route::post('/viewonemenu',[ControllerKalayang::class,'viewonemenu']);
 //Transaksi Kalayang CRUD
 Route::post('/viewtransaksi',[ControllerKalayang::class,'viewtransaksi']);
 Route::post('/savetransaksi',[ControllerKalayang::class,'savetransaksi']);
+Route::post('/viewtransaksi',[ControllerKalayang::class,'viewtransaksi']);
