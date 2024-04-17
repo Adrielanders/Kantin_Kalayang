@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ModelKalayangTransaksi extends Model
 {
     use HasFactory;
+    protected $table ='tb_menu';
+    protected $primaryKey ='id_menu';
+    protected $fillable = ['nama_menu', 'harga_menu','ekstra', 'status_menu','desc_menu', 'created_at', 'updated_at'];
 }
