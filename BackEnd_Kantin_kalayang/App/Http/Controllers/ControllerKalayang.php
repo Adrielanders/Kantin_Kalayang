@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class ControllerKalayang extends Controller
 {
-    //Controller Menu 
+    //Controller Menu
     public function makemenu(Request $request)
     {
         $id_penjual = $request->post('id_penjual');
@@ -219,8 +219,8 @@ class ControllerKalayang extends Controller
             ->where('tb_transaksi.id_penjual', $id_penjual)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
-
-        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200); 
+           
+        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
     }
 
 
