@@ -178,23 +178,22 @@ class ControllerKalayang extends Controller
     {
         $id_penjual = $request->post('id_penjual');
         $alltransaksi = ModelKalayangTransaksi::select(
-            'tb_transaksi.id_menu', 
+            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
             DB::raw('MAX(tb_transaksi.id_order) AS id_order'),
-            DB::raw("DATE_FORMAT(MAX(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
             DB::raw('MAX(tb_transaksi.nomor_meja) AS nomor_meja'),
             DB::raw('MAX(tb_transaksi.status_pesanan) AS status_pesanan'),
-            DB::raw('MAX(tb_transaksi.catatan_pemesan) AS catatan_pemesan'),    
+            DB::raw('MAX(tb_transaksi.catatan_pemesan) AS catatan_pemesan'),
             DB::raw('MAX(tb_transaksi.ekstra_menu) AS ekstra_menu'),
             DB::raw('MAX(tb_transaksi.created_at) AS created_at'),
             DB::raw('MAX(tb_transaksi.updated_at) AS updated_at'),
-            DB::raw('COUNT(tb_transaksi.id_menu) AS Jumlah_pesan'),
+            DB::raw('COUNT(tb_transaksi.id_penjual) AS Jumlah_pesan'),
             'tb_transaksi.id_penjual',
             DB::raw('SUM(tb_menu.harga_menu) AS harga_menu')
         )
-        ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
-        ->where('tb_transaksi.id_penjual', $id_penjual)
-        ->groupBy('tb_transaksi.id_menu', 'tb_transaksi.id_penjual') 
-        ->get();
+            ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
+            ->where('tb_transaksi.id_penjual', $id_penjual)
+            ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
+            ->get();
 
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
     }
