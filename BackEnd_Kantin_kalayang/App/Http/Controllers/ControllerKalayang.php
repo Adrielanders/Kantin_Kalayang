@@ -144,11 +144,12 @@ class ControllerKalayang extends Controller
     }
 
     public function savetransaksi(Request $request)
-    {
+    { 
         $id_menu = $request->post('id_menu');
         $id_penjual = $request->post('id_penjual');
         $nomor_meja = $request->post('nomor_meja');
         $status_pesanan = $request->post('status_pesanan');
+        $pesanan = $request->post('pesanan');
         $catatan_pemesan = $request->post('catatan_pemesan');
         $ekstra_menu = $request->post('ekstra_menu');
 
@@ -156,6 +157,7 @@ class ControllerKalayang extends Controller
         $transaction = new ModelKalayangTransaksi();
         $transaction->id_menu = $id_menu;
         $transaction->id_penjual = $id_penjual;
+        $transaction->pesanan = $pesanan;
         $transaction->id_order = $this->generateUniqueNumber();
         $transaction->nomor_meja = $nomor_meja;
         $transaction->status_pesanan = $status_pesanan;
@@ -198,6 +200,7 @@ class ControllerKalayang extends Controller
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
     }
 
+    //Baru
     public function detailrekap(Request $request)
     {
         $id_penjual = $request->post('id_penjual');
@@ -217,6 +220,7 @@ class ControllerKalayang extends Controller
         )
             ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
             ->where('tb_transaksi.id_penjual', $id_penjual)
+            ->where('formatted_tanggal_pemesanan',$date)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
            
