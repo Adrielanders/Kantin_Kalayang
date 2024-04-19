@@ -222,16 +222,12 @@ class ControllerKalayang extends Controller
             ->wheredate('tb_transaksi.tanggal_pemesanan',$date)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
-=======
 
 
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
->>>>>>> d4e4702 (new push)
-=======
+
 
             $detailtransaksi = ModelKalayangTransaksi::select(
                 DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
@@ -249,7 +245,6 @@ class ControllerKalayang extends Controller
 
 
         return response()->json(['message' => 'success', 'data' => $alltransaksi,'detail'=>$detailtransaksi], 200);
->>>>>>> 7659920 (viewdetailmenu)
     }
 
 
