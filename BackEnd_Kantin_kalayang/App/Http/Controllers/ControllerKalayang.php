@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class ControllerKalayang extends Controller
 {
-    //Controller Menu
+    //Controller Menu CRUD
     public function makemenu(Request $request)
     {
         $id_penjual = $request->post('id_penjual');
