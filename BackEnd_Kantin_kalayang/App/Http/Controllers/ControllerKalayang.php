@@ -144,7 +144,7 @@ class ControllerKalayang extends Controller
     }
 
     public function savetransaksi(Request $request)
-    { 
+    {
         $id_menu = $request->post('id_menu');
         $id_penjual = $request->post('id_penjual');
         $nomor_meja = $request->post('nomor_meja');
@@ -224,12 +224,12 @@ class ControllerKalayang extends Controller
             ->get();
 <<<<<<< HEAD
 <<<<<<< HEAD
-           
+
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
 =======
-        
 
-        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200); 
+
+        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
 >>>>>>> d4e4702 (new push)
 =======
 
