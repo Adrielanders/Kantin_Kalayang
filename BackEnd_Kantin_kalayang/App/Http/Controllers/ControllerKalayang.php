@@ -206,7 +206,7 @@ class ControllerKalayang extends Controller
         $id_penjual = $request->post('id_penjual');
         $date = $request->post('date');
         $alltransaksi = ModelKalayangTransaksi::select(
-            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
+            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%y') AS formatted_tanggal_pemesanan"),
             DB::raw('MAX(tb_transaksi.id_order) AS id_order'),
             DB::raw('MAX(tb_transaksi.nomor_meja) AS nomor_meja'),
             DB::raw('MAX(tb_transaksi.status_pesanan) AS status_pesanan'),
@@ -220,11 +220,17 @@ class ControllerKalayang extends Controller
         )
             ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
             ->where('tb_transaksi.id_penjual', $id_penjual)
-            ->where('formatted_tanggal_pemesanan',$date)
+            ->whereDate('tb_transaksi.tanggal_pemesanan',$date)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
+<<<<<<< HEAD
            
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
+=======
+        
+
+        return response()->json(['message' => 'success', 'data' => $alltransaksi], 200); 
+>>>>>>> d4e4702 (new push)
     }
 
 
