@@ -149,7 +149,6 @@ class ControllerKalayang extends Controller
         $id_penjual = $request->post('id_penjual');
         $nomor_meja = $request->post('nomor_meja');
         $status_pesanan = $request->post('status_pesanan');
-        $pesanan = $request->post('pesanan');
         $catatan_pemesan = $request->post('catatan_pemesan');
         $ekstra_menu = $request->post('ekstra_menu');
 
@@ -157,7 +156,6 @@ class ControllerKalayang extends Controller
         $transaction = new ModelKalayangTransaksi();
         $transaction->id_menu = $id_menu;
         $transaction->id_penjual = $id_penjual;
-        $transaction->pesanan = $pesanan;
         $transaction->id_order = $this->generateUniqueNumber();
         $transaction->nomor_meja = $nomor_meja;
         $transaction->status_pesanan = $status_pesanan;
@@ -200,13 +198,12 @@ class ControllerKalayang extends Controller
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
     }
 
-    //Baru
     public function detailrekap(Request $request)
     {
         $id_penjual = $request->post('id_penjual');
         $date = $request->post('date');
         $alltransaksi = ModelKalayangTransaksi::select(
-            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%y') AS formatted_tanggal_pemesanan"),
+            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
             DB::raw('MAX(tb_transaksi.id_order) AS id_order'),
             DB::raw('MAX(tb_transaksi.nomor_meja) AS nomor_meja'),
             DB::raw('MAX(tb_transaksi.status_pesanan) AS status_pesanan'),
@@ -216,13 +213,16 @@ class ControllerKalayang extends Controller
             DB::raw('MAX(tb_transaksi.updated_at) AS updated_at'),
             DB::raw('COUNT(tb_transaksi.id_penjual) AS Jumlah_pesan'),
             'tb_transaksi.id_penjual',
-            DB::raw('SUM(tb_menu.harga_menu) AS harga_menu')
+            DB::raw('SUM(tb_menu.harga_menu) AS harga_menu'),
+            DB::raw('MAX(tb_menu.nama_menu) AS nama_menu'),
+            DB::raw('COUNT(tb_menu.id_menu) AS Jumlah')
         )
             ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
             ->where('tb_transaksi.id_penjual', $id_penjual)
-            ->whereDate('tb_transaksi.tanggal_pemesanan',$date)
+            ->wheredate('tb_transaksi.tanggal_pemesanan',$date)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
+<<<<<<< HEAD
 <<<<<<< HEAD
            
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
@@ -231,6 +231,25 @@ class ControllerKalayang extends Controller
 
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200); 
 >>>>>>> d4e4702 (new push)
+=======
+
+            $detailtransaksi = ModelKalayangTransaksi::select(
+                DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
+                'tb_transaksi.id_penjual',
+            DB::raw('SUM(tb_menu.harga_menu) AS harga_menu'),
+            DB::raw('MAX(tb_menu.nama_menu) AS nama_menu'),
+            DB::raw('COUNT(tb_menu.id_menu) AS Jumlah')
+        )
+        ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
+        ->where('tb_transaksi.id_penjual', $id_penjual)
+        ->wheredate('tb_transaksi.tanggal_pemesanan',$date)
+        ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual','tb_menu.id_menu')
+        ->get();
+
+
+
+        return response()->json(['message' => 'success', 'data' => $alltransaksi,'detail'=>$detailtransaksi], 200);
+>>>>>>> 7659920 (viewdetailmenu)
     }
 
 
