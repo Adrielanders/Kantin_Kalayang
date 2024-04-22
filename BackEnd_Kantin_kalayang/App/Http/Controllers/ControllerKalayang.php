@@ -251,6 +251,7 @@ class ControllerKalayang extends Controller
 
     //Controller Penjual
     
+    
     //Mail
     /**
      * Get the authenticated User.
