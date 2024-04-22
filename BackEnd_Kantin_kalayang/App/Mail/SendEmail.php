@@ -5,46 +5,33 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class SendEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $isSuccess;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(private $name)
+    public function __construct()
     {
-        //
+    
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
      *
-     * @return \Illuminate\Mail\Mailables\Envelope
+     * @return $this
      */
-    public function envelope()
+    public function build()
     {
-        return new Envelope(
-            subject: 'My Test Email',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            view: 'emails.sendemail',
-            with: ['name' => $this->name],
-        );
+        return $this->from('no-reply@pupr.co.id', 'No-reply')
+        ->subject('Your Registration is Accepted!!!')
+        ->view('emails.sendemail',['name'=>"Kasun"]);
     }
 }

@@ -7,6 +7,8 @@ use App\Models\ModelKalayangMenu;
 use App\Models\ModelKalayangTransaksi;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class ControllerKalayang extends Controller
 {
@@ -247,6 +249,20 @@ class ControllerKalayang extends Controller
         return response()->json(['message' => 'success', 'data' => $alltransaksi,'detail'=>$detailtransaksi], 200);
     }
 
+    //Controller Penjual
+    
+    //Mail
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        Mail::to('adrielanderson.s@gmail.com')->send(new SendEmail());
+
+        return true;
+    }
 
     //Controller Privaate Function
     private function generateUniqueNumber()

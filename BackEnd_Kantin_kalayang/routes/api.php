@@ -17,3 +17,6 @@ Route::post('/viewtransaksi',[ControllerKalayang::class,'viewtransaksi']);
 Route::post('/savetransaksi',[ControllerKalayang::class,'savetransaksi']);
 Route::post('/viewrekap',[ControllerKalayang::class,'viewrekap']);
 Route::post('/detailrekap',[ControllerKalayang::class,'detailrekap']);
+
+//Mail
+Route::get('/user/mail/send', [ControllerKalayang::class, 'index']);
