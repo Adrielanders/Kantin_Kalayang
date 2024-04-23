@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ModelKalayangMenu;
 use App\Models\ModelKalayangTransaksi;
-use Illuminate\Cache\Repository;
+use App\Models\ModelKalayangPenjual;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ControllerKalayang extends Controller
 {
@@ -221,7 +223,7 @@ class ControllerKalayang extends Controller
         )
             ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
             ->where('tb_transaksi.id_penjual', $id_penjual)
-            ->wheredate('tb_transaksi.tanggal_pemesanan',$date)
+            ->wheredate('tb_transaksi.tanggal_pemesanan', $date)
             ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual')
             ->get();
 
@@ -231,38 +233,113 @@ class ControllerKalayang extends Controller
         return response()->json(['message' => 'success', 'data' => $alltransaksi], 200);
 
 
-            $detailtransaksi = ModelKalayangTransaksi::select(
-                DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
-                'tb_transaksi.id_penjual',
+        $detailtransaksi = ModelKalayangTransaksi::select(
+            DB::raw("DATE_FORMAT(DATE(tb_transaksi.tanggal_pemesanan), '%d/%m/%Y %h:%i') AS formatted_tanggal_pemesanan"),
+            'tb_transaksi.id_penjual',
             DB::raw('SUM(tb_menu.harga_menu) AS harga_menu'),
             DB::raw('MAX(tb_menu.nama_menu) AS nama_menu'),
             DB::raw('COUNT(tb_menu.id_menu) AS Jumlah')
         )
-        ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
-        ->where('tb_transaksi.id_penjual', $id_penjual)
-        ->wheredate('tb_transaksi.tanggal_pemesanan',$date)
-        ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual','tb_menu.id_menu')
-        ->get();
+            ->join('tb_menu', 'tb_menu.id_menu', '=', 'tb_transaksi.id_menu')
+            ->where('tb_transaksi.id_penjual', $id_penjual)
+            ->wheredate('tb_transaksi.tanggal_pemesanan', $date)
+            ->groupBy('formatted_tanggal_pemesanan', 'tb_transaksi.id_penjual', 'tb_menu.id_menu')
+            ->get();
 
 
 
-        return response()->json(['message' => 'success', 'data' => $alltransaksi,'detail'=>$detailtransaksi], 200);
+        return response()->json(['message' => 'success', 'data' => $alltransaksi, 'detail' => $detailtransaksi], 200);
     }
 
     //Controller Penjual
-    
-    
-    //Mail
+    public function savedatapenjual(Request $request)
+    {
+        $nama_pemilik_toko = $request->post('nama_pemilik_toko');
+        $nama_toko = $request->post('nama_toko');
+        $nomor_telepon = $request->post('nomor_telepon');
+        $nomor_toko = $request->post('nomor_toko');
+        $email = $request->post('email');
+
+        if ($nama_pemilik_toko) {
+            if ($nama_toko) {
+                if ($nomor_telepon) {
+                    if ($nomor_toko) {
+                        if ($email) {
+                            $savedata = new ModelKalayangPenjual();
+                            $savedata->nama_pemilik = $nama_pemilik_toko;
+                            $savedata->nama_toko = $nama_toko;
+                            $savedata->nomor_telepon = $nomor_telepon;
+                            $savedata->nomor_toko = $nomor_toko;
+                            $savedata->email = $email;
+                            $savedata->save();
+
+                            if ($savedata) {
+                                $msg = "Data berhasil di simpan";
+                                $sts = true;
+                            } else {
+                                $msg = "Data gagal di simpan";
+                                $sts = false;
+                            }
+                        } else {
+                            $sts = false;
+                            $msg = "Email tidak boleh kosong";
+                        }
+                    } else {
+                        $sts = false;
+                        $msg = "Nomor toko tidak boleh kosong";
+                    }
+                } else {
+                    $sts = false;
+                    $msg = "Nomor telepon tidak boleh kosong";
+                }
+            } else {
+                $sts = false;
+                $msg = "Nama toko tidak boleh kosong";
+            }
+        } else {
+            $sts = false;
+            $msg = "Nama pemilik toko tidak boleh kosong";
+        }
+        return response()->json(['message' => $msg, 'status' => $sts], 200);
+    }
+
+    public function generatepassword(Request $request){
+        $email = $request->post('email');
+        $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
+        if ($penjual) {
+            $idPenjual = $penjual->id_penjual;
+
+            $UpdatePenjual = ModelKalayangPenjual::find($idPenjual);
+            $password = Str::password(16, true, true, false, false);
+            if ($UpdatePenjual) {
+                $UpdatePenjual->kata_sandi = $password;
+                $UpdatePenjual->save();
+                return  response()->json(['message' => "berhasil", 'status' => true], 200);
+            } else {
+                return response()->json(['message' => "gagal", 'status' => false], 404);
+            }   
+        } else {
+            return  response()->json(['message' => "gagal mencari id", 'status' => false], 404);
+        }
+    }
+
+    //E-Mail
     /**
      * Get the authenticated User.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function sendemail(Request $request)
     {
-        Mail::to('adrielanderson.s@gmail.com')->send(new SendEmail());
+        $email = $request->post('email');
+            if ($email) {
+                Mail::to($email)->send(new SendEmail());
+            } else {
+                return "error";
+            }
 
-        return true;
+            return  response()->json(['message' => "berhasil", 'status' => true], 200);
+      
     }
 
     //Controller Privaate Function

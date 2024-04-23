@@ -91,7 +91,7 @@
     <div class="spacing"></div>
     <div id ="rightbar">
         <h1 class="heading"></h1>
-        <p >Hi {{$name}} ,</p>
+        <p >Hi,</p>
         <p>Thank you for registered your business with Genotechies.</p>
         <p>Please view the inbox for more details or contact Geno Tech admin for further instructions.</p>
     
