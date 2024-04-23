@@ -314,7 +314,7 @@ class ControllerKalayang extends Controller
             if ($UpdatePenjual) {
                 $UpdatePenjual->kata_sandi = $password;
                 $UpdatePenjual->save();
-                return  response()->json(['message' => "berhasil", 'status' => true], 200);
+                return  response()->json(['message' => "berhasil", 'status' => true, 'data'=>$UpdatePenjual], 200);
             } else {
                 return response()->json(['message' => "gagal", 'status' => false], 404);
             }   
@@ -323,6 +323,9 @@ class ControllerKalayang extends Controller
         }
     }
 
+    public function getdata(){
+
+    }
     //E-Mail
     /**
      * Get the authenticated User.

@@ -92,12 +92,30 @@
     <div id ="rightbar">
         <h1 class="heading"></h1>
         <p >Hi,</p>
-        <p>Thank you for registered your business with Genotechies.</p>
+        <p>Terimakasih telah mendaftar</p>
         <p>Please view the inbox for more details or contact Geno Tech admin for further instructions.</p>
     
         <div class="text-div">Thanks,</div>
         <div class="text-div">Geno Team.</div>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+            $.ajax({
+                url: '/api/generatepassword',
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    const itemsElement = $('#items');
+                    $.each(data, function(index, item) {
+                        itemsElement.append('<li>' + item.name + '</li>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+</script>
 </body>
 </html>
