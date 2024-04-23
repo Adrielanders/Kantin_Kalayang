@@ -32,6 +32,6 @@ class SendEmail extends Mailable
     {
         return $this->from('no-reply@pupr.co.id', 'No-reply')
         ->subject('Your Registration is Accepted!!!')
-        ->view('emails.sendemail',['name'=>"Kasun"]);
+        ->view('emails.sendemail');
     }
 }

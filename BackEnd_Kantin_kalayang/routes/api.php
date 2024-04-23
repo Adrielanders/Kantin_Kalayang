@@ -18,5 +18,8 @@ Route::post('/savetransaksi',[ControllerKalayang::class,'savetransaksi']);
 Route::post('/viewrekap',[ControllerKalayang::class,'viewrekap']);
 Route::post('/detailrekap',[ControllerKalayang::class,'detailrekap']);
 
+//Akun Penjual Kalayang CRUD
+Route::post('/savedata',[ControllerKalayang::class,'savedatapenjual']);
+Route::post('/generatepassword',[ControllerKalayang::class,'savedatapenjual']);
 //Mail
-Route::get('/user/mail/send', [ControllerKalayang::class, 'index']);
+Route::post('/user/mail/send', [ControllerKalayang::class, 'sendemail']);
