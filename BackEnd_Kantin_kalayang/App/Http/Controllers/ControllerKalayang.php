@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ModelKalayangMenu;
 use App\Models\ModelKalayangTransaksi;
 use App\Models\ModelKalayangPenjual;
+use App\Models\ModelKalayangSession;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
@@ -324,7 +325,8 @@ class ControllerKalayang extends Controller
     }
 
     public function LoginUser(Request $request){
-        
+        $email = $request->post('email');
+        $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
     }
 
     //E-Mail
