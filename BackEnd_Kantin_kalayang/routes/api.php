@@ -22,6 +22,7 @@ Route::post('/detailrekap',[ControllerKalayang::class,'detailrekap']);
 Route::post('/savedata',[ControllerKalayang::class,'savedatapenjual']);
 Route::post('/generatepassword',[ControllerKalayang::class,'generatepassword']);
 Route::post('/getdata',[ControllerKalayang::class,'getdatapenjual']);
+Route::post('/newlogin',[ControllerKalayang::class,'loginnewuser']);
 
 //Mail
 Route::post('/user/mail/send', [ControllerKalayang::class, 'sendemail']);

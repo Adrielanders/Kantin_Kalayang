@@ -260,48 +260,60 @@ class ControllerKalayang extends Controller
         $nomor_telepon = $request->post('nomor_telepon');
         $nomor_toko = $request->post('nomor_toko');
         $email = $request->post('email');
+        $existingEmail = ModelKalayangPenjual::where('email', $email)->first();
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $msg = "Format email tidak valid";
+            $sts = false;
+            return response()->json(['message' => $msg, 'status' => $sts], 404);
+        } else {
+            if ($existingEmail) {
+                $msg = "Email sudah terdaftar";
+                $sts = false;
+                return response()->json(['message' => $msg, 'status' => $sts], 404);
+            } else {
+                if ($nama_pemilik_toko) {
+                    if ($nama_toko) {
+                        if ($nomor_telepon) {
+                            if ($nomor_toko) {
+                                if ($email) {
+                                    $savedata = new ModelKalayangPenjual();
+                                    $savedata->nama_pemilik = $nama_pemilik_toko;
+                                    $savedata->nama_toko = $nama_toko;
+                                    $savedata->nomor_telepon = $nomor_telepon;
+                                    $savedata->nomor_toko = $nomor_toko;
+                                    $savedata->email = $email;
+                                    $savedata->save();
 
-        if ($nama_pemilik_toko) {
-            if ($nama_toko) {
-                if ($nomor_telepon) {
-                    if ($nomor_toko) {
-                        if ($email) {
-                            $savedata = new ModelKalayangPenjual();
-                            $savedata->nama_pemilik = $nama_pemilik_toko;
-                            $savedata->nama_toko = $nama_toko;
-                            $savedata->nomor_telepon = $nomor_telepon;
-                            $savedata->nomor_toko = $nomor_toko;
-                            $savedata->email = $email;
-                            $savedata->save();
-
-                            if ($savedata) {
-                                $msg = "Data berhasil di simpan";
-                                $sts = true;
+                                    if ($savedata) {
+                                        $msg = "Data berhasil di simpan";
+                                        $sts = true;
+                                    } else {
+                                        $msg = "Data gagal di simpan";
+                                        $sts = false;
+                                    }
+                                } else {
+                                    $sts = false;
+                                    $msg = "Email tidak boleh kosong";
+                                }
                             } else {
-                                $msg = "Data gagal di simpan";
                                 $sts = false;
+                                $msg = "Nomor toko tidak boleh kosong";
                             }
                         } else {
                             $sts = false;
-                            $msg = "Email tidak boleh kosong";
+                            $msg = "Nomor telepon tidak boleh kosong";
                         }
                     } else {
                         $sts = false;
-                        $msg = "Nomor toko tidak boleh kosong";
+                        $msg = "Nama toko tidak boleh kosong";
                     }
                 } else {
                     $sts = false;
-                    $msg = "Nomor telepon tidak boleh kosong";
+                    $msg = "Nama pemilik toko tidak boleh kosong";
                 }
-            } else {
-                $sts = false;
-                $msg = "Nama toko tidak boleh kosong";
+                return response()->json(['message' => $msg, 'status' => $sts], 200);
             }
-        } else {
-            $sts = false;
-            $msg = "Nama pemilik toko tidak boleh kosong";
         }
-        return response()->json(['message' => $msg, 'status' => $sts], 200);
     }
 
     public function generatepassword(Request $request)
@@ -324,7 +336,27 @@ class ControllerKalayang extends Controller
         }
     }
 
-    public function LoginUser(Request $request){
+    public function loginnewuser(Request $request)
+    {
+        $email = $request->post('email');
+        $kata_sandi = $request->post('kata_sandi');
+        $penjual = ModelKalayangPenjual::where('email', $email)->first();
+
+        if (!$penjual) {
+            return response()->json(['message' => "Akun belum terdaftar", 'status' => false], 404);
+        }
+
+        $emaildatabase = $penjual->email;
+        $password = $penjual->kata_sandi;
+
+        if ($email != $emaildatabase || $kata_sandi != $password) {
+            return response()->json(['message' => "Email atau Password salah", 'status' => false], 404);
+        }
+        return response()->json(['message' => "Berhasil login", 'status' => true], 200);
+    }
+
+    public function RegisterUser(Request $request)
+    {
         $email = $request->post('email');
         $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
     }
@@ -350,13 +382,9 @@ class ControllerKalayang extends Controller
                 return "error";
             }
             return  response()->json(['message' => "berhasil kirim", 'status' => true], 200);
-           
-            
         } else {
             return response()->json(['message' => "Data tidak ditemukan", 'status' => false, 'data' => $penjual], 404);
         }
-
-      
     }
 
     //Controller Privaate Function
