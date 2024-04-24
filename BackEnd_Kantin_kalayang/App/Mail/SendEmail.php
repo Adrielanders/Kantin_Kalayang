@@ -30,8 +30,13 @@ class SendEmail extends Mailable
      */
     public function build()
     {
+
+        $namaPemilik = session('namaPemilik');
+        $email = session('email');
+        $nomorTelepon = session('nomorTelepon');
+        $KataSandi = session('KataSandi');
         return $this->from('no-reply@pupr.co.id', 'No-reply')
         ->subject('Your Registration is Accepted!!!')
-        ->view('emails.sendemail');
+        ->view('emails.sendemail', compact('namaPemilik', 'email', 'nomorTelepon', 'KataSandi'));
     }
 }

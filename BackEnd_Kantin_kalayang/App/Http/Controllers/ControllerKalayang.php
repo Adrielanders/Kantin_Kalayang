@@ -303,29 +303,30 @@ class ControllerKalayang extends Controller
         return response()->json(['message' => $msg, 'status' => $sts], 200);
     }
 
-    public function generatepassword(Request $request){
+    public function generatepassword(Request $request)
+    {
         $email = $request->post('email');
         $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
         if ($penjual) {
             $idPenjual = $penjual->id_penjual;
-
             $UpdatePenjual = ModelKalayangPenjual::find($idPenjual);
             $password = Str::password(16, true, true, false, false);
             if ($UpdatePenjual) {
                 $UpdatePenjual->kata_sandi = $password;
                 $UpdatePenjual->save();
-                return  response()->json(['message' => "berhasil", 'status' => true, 'data'=>$UpdatePenjual], 200);
+                return response()->json(['message' => "Update berhasil", 'status' => true], 200);
             } else {
-                return response()->json(['message' => "gagal", 'status' => false], 404);
-            }   
+                return response()->json(['message' => "Update penjual gagal", 'status' => false], 500);
+            }
         } else {
             return  response()->json(['message' => "gagal mencari id", 'status' => false], 404);
         }
     }
 
-    public function getdata(){
-
+    public function LoginUser(Request $request){
+        
     }
+
     //E-Mail
     /**
      * Get the authenticated User.
@@ -335,13 +336,24 @@ class ControllerKalayang extends Controller
     public function sendemail(Request $request)
     {
         $email = $request->post('email');
+        $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
+        if ($penjual) {
+            session(['namaPemilik' => $penjual['nama_pemilik']]);
+            session(['email' => $penjual['email']]);
+            session(['nomorTelepon' => $penjual['nomor_telepon']]);
+            session(['KataSandi' => $penjual['kata_sandi']]);
             if ($email) {
                 Mail::to($email)->send(new SendEmail());
             } else {
                 return "error";
             }
+            return  response()->json(['message' => "berhasil kirim", 'status' => true], 200);
+           
+            
+        } else {
+            return response()->json(['message' => "Data tidak ditemukan", 'status' => false, 'data' => $penjual], 404);
+        }
 
-            return  response()->json(['message' => "berhasil", 'status' => true], 200);
       
     }
 
