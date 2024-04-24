@@ -35,8 +35,9 @@ class SendEmail extends Mailable
         $email = session('email');
         $nomorTelepon = session('nomorTelepon');
         $KataSandi = session('KataSandi');
+        $subject = "Your Registration is Accepted!!!";
         return $this->from('no-reply@pupr.co.id', 'No-reply')
-        ->subject('Your Registration is Accepted!!!')
+        ->subject($subject)
         ->view('emails.sendemail', compact('namaPemilik', 'email', 'nomorTelepon', 'KataSandi'));
     }
 }
