@@ -24,5 +24,5 @@ Route::post('/generatepassword',[ControllerKalayang::class,'generatepassword']);
 Route::post('/getdata',[ControllerKalayang::class,'getdatapenjual']);
 Route::post('/newlogin',[ControllerKalayang::class,'loginnewuser']);
 
-//Mailtrap
+//Mail
 Route::post('/user/mail/send', [ControllerKalayang::class, 'sendemail']);
