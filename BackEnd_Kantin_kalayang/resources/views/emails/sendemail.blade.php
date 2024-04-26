@@ -92,12 +92,13 @@
         <div id="rightbar">
             <h1 class="heading"></h1>
             <p>Hi, {{$namaPemilik}}</p>
-            <p>Terimakasih telah mendaftar</p>
-            <p>Berikut Kami cantumkan Email dan Password anda:</p>
-            <h4>Email :</h4><p>{{ $email }}</p>
-            <h4>Password :</h4><p>{{ $KataSandi }}</p>
-            <p>Jika anda telah login, anda dapat langsung merubah password anda</p>
-            <div class="text-div">Thanks,</div>
+            <p>Terimakasih telah mendaftar di kantin kalayang</p>
+            <p>dengan email ini kami telah menyetujui seluruh berkas yang anda berikan</p>
+            <p>berikut kami berikan username dan password :</p>
+            <p>Email : {{ $email }}</p>
+            <p>Password :{{ $KataSandi }}</p>
+            <p>Mohon setelah anda berhasil login dapat langsung mengganti password anda</p>
+            <div class="text-div">Terima kasih,</div>
             <div class="text-div">Admin Kantin Kalayang</div>
         </div>
     </div>
