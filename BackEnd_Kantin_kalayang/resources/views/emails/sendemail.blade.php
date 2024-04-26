@@ -85,6 +85,7 @@
 </head>
 
 <body>
+    <!-- mail body -->
     <div id="box">
         <div id="header">
         </div>
