@@ -26,3 +26,6 @@ Route::post('/newlogin',[ControllerKalayang::class,'loginnewuser']);
 
 //Mail
 Route::post('/user/mail/send', [ControllerKalayang::class, 'sendemail']);
+
+// Han Vir
+Route::post('/savedatanew',[ControllerKalayang::class,'savedatapenjual_new']);
