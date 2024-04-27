@@ -10,6 +10,7 @@ use App\Models\ModelKalayangSession;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use App\Mail\SendEmailNew;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -400,4 +401,200 @@ class ControllerKalayang extends Controller
         }
         return '#M' . $date . sprintf('%04d', $nextSequentialNumber);
     }
+
+    // Han Vir
+
+    public function savedatapenjual_new(Request $request)
+    {
+        $nama_pemilik_toko = $request->post('nama_pemilik_toko');
+        $nama_toko = $request->post('nama_toko');
+        $nomor_telepon = $request->post('nomor_telepon');
+        $nomor_toko = $request->post('nomor_toko');
+        $email = $request->post('email');
+        $existingEmail = ModelKalayangPenjual::where('email', $email)->first();
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $msg = "Format email tidak valid";
+            $sts = false;
+            return response()->json(['message' => $msg, 'status' => $sts], 404);
+        } else {
+            if ($existingEmail) {
+                $msg = "Email sudah terdaftar";
+                $sts = false;
+                return response()->json(['message' => $msg, 'status' => $sts], 404);
+            } else {
+                if ($nama_pemilik_toko) {
+                    if ($nama_toko) {
+                        if ($nomor_telepon) {
+                            if ($nomor_toko) {
+                                if ($email) {
+                                    $savedata = new ModelKalayangPenjual();
+                                    $savedata->nama_pemilik = $nama_pemilik_toko;
+                                    $savedata->nama_toko = $nama_toko;
+                                    $savedata->nomor_telepon = $nomor_telepon;
+                                    $savedata->nomor_toko = $nomor_toko;
+                                    $savedata->email = $email;
+                                    $savedata->kata_sandi = Str::password(16, true, true, false, false);
+                                    $savedata->save();
+
+                                    if ($savedata) {
+                                        $msg = "Data berhasil di simpan";
+                                        $sts = true;
+                                        $this->sendemail_new($email);
+                                    } else {
+                                        $msg = "Data gagal di simpan";
+                                        $sts = false;
+                                    }
+                                } else {
+                                    $sts = false;
+                                    $msg = "Email tidak boleh kosong";
+                                }
+                            } else {
+                                $sts = false;
+                                $msg = "Nomor toko tidak boleh kosong";
+                            }
+                        } else {
+                            $sts = false;
+                            $msg = "Nomor telepon tidak boleh kosong";
+                        }
+                    } else {
+                        $sts = false;
+                        $msg = "Nama toko tidak boleh kosong";
+                    }
+                } else {
+                    $sts = false;
+                    $msg = "Nama pemilik toko tidak boleh kosong";
+                }
+                return response()->json(['message' => $msg, 'status' => $sts], 200);
+            }
+        }
+    }
+
+    public function sendemail_new($email)
+    {
+        $penjual = ModelKalayangPenjual::where('email', 'like', $email . '%')->first();
+        if ($email) {
+            if ($penjual) {
+                $content = '<!DOCTYPE html>
+                <html>
+
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                    <style>
+                        body {
+                            height: 750px;
+                            margin: 2px;
+                            padding: 2px;
+                            font-family: Helvetica, Arial, sans-serif;
+                        }
+
+                        .button-container {
+                            margin: 40px 0;
+                        }
+
+                        #box {
+                            width: 850px;
+                            margin: 0 auto;
+                            height: 100%;
+                        }
+
+                        #header {
+                            height: 200px;
+                            width: 100%;
+                            position: relative;
+                            display: block;
+                            border-bottom: 1px solid #504597;
+                        }
+
+                        .button {
+                            background-color: #d60e0e;
+                            border: none;
+                            color: white !important;
+                            padding: 10px 25px;
+                            text-align: center;
+                            text-decoration: none;
+                            margin: auto;
+                            font-size: 22px;
+                            cursor: pointer;
+                            border-radius: 10px;
+                        }
+
+                        #image {
+                            width: 150px;
+                            height: auto;
+                            margin-top: 16px;
+                        }
+
+                        #rightbar {
+                            width: 100%;
+                            height: 560px;
+                            padding: 0px;
+                        }
+
+                        .text-div {
+                            font-size: 18px;
+                            margin-bottom: 3px;
+                        }
+
+                        #footer {
+                            clear: both;
+                            height: 40px;
+                            text-align: center;
+                            background-color: #2d0f80;
+                            margin: 0px;
+                            padding: 0px;
+                            color: white;
+                        }
+
+                        p,
+                        pre {
+                            font-size: 18px;
+                            line-height: 1.4;
+                        }
+
+                        .heading {
+                            color: #504597;
+                            font-size: 24px;
+                        }
+                    </style>
+                </head>
+
+                <body>
+                    <!-- mail body -->
+                    <div id="box">
+                        <div id="header">
+                        </div>
+                        <div class="spacing"></div>
+                        <div id="rightbar">
+                            <h1 class="heading"></h1>
+                            <p>Hi, '.$penjual['nama_pemilik'].'</p>
+                            <p>Terimakasih telah mendaftar di kantin kalayang</p>
+                            <p>dengan email ini kami telah menyetujui seluruh berkas yang anda berikan</p>
+                            <p>berikut kami berikan username dan password :</p>
+                            <p>Email : '.$penjual['email'].'</p>
+                            <p>Password : '.$penjual['kata_sandi'].'</p>
+                            <p>Mohon setelah anda berhasil login dapat langsung mengganti password anda</p>
+                            <div class="text-div">Terima kasih,</div>
+                            <div class="text-div">Admin Kantin Kalayang</div>
+                        </div>
+                    </div>
+                </body>
+
+                </html>';
+                $mailData = [
+                    'to' => $penjual['email'],
+                    'content' => $content,
+                    'subject' => 'Your Registration is Accepted!!!',
+                ];
+                $send = Mail::to($mailData['to'])->send(new SendEmailNew($mailData));
+            } else {
+                return "error";
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
