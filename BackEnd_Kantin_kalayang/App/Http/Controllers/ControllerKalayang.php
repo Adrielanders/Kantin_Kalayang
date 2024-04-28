@@ -588,6 +588,8 @@ class ControllerKalayang extends Controller
                     'subject' => 'Your Registration is Accepted!!!',
                 ];
                 $send = Mail::to($mailData['to'])->send(new SendEmailNew($mailData));
+                echo var_dump($send);
+                exit;
             } else {
                 return "error";
             }

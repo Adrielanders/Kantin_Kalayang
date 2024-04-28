@@ -28,7 +28,7 @@ class SendEmailNew extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address(env('MAIL_FROM_ADDRESS'), 'Kantin Kalayang'),
+            from: new Address("noreply@youtzmedia.id"),
             subject: $this->mailData['subject'],
         );
     }
