@@ -13,7 +13,7 @@ use Illuminate\Mail\Mailables\Address;
 class SendEmailNew extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $mailData;
     /**
      * Create a new message instance.
      */
@@ -28,7 +28,7 @@ class SendEmailNew extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address("noreply@youtzmedia.id"),
+            from: new Address(env('MAIL_FROM_ADDRESS'), "Kantin Kalayang"),
             subject: $this->mailData['subject'],
         );
     }
