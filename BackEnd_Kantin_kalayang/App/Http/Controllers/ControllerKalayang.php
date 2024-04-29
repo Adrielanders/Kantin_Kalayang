@@ -415,7 +415,7 @@ class ControllerKalayang extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $msg = "Format email tidak valid";
             $sts = false;
-            return response()->json(['message' => $msg, 'status' => $sts], 404);
+            return response()->json(['message' => $msg, 'status' => $sts, 'email' => $email], 404);
         } else {
             if ($existingEmail) {
                 $msg = "Email sudah terdaftar";
