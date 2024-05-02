@@ -2,14 +2,13 @@
   <div id="app" class="bg-gradient">
     <div class="black-line"></div>
     <div class="center-box">
-        <div class="inner-circle"></div>
-      <div class="box">  
-      <h6 id="fontjudul">Kantin Kalayang PUPR</h6>
+      <div class="inner-circle"></div>
+      <div class="box">
+        <h6 id="fontjudul">Kantin Kalayang PUPR</h6>
+        <img src="/MapPin.png" >
       </div>
-    
     </div>
 
-      
     <div class="top-half bg-gray"></div>
     <div class="bottom-half bg-cream"></div>
   </div>
@@ -26,7 +25,7 @@ defineOptions({
 #app {
   font-family: Arial, sans-serif;
   text-align: center;
-  height: 100vh; /* Menentukan tinggi halaman sesuai dengan tinggi viewport */
+  min-height: 100vh; /* Menggunakan min-height agar konten tetap terlihat saat viewport kecil */
   display: flex;
   flex-direction: column;
 }
@@ -39,8 +38,8 @@ defineOptions({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  position: absolute;
+  height: calc(100vh - 2px); /* Mengurangi tinggi garis hitam dari tinggi viewport */
+  position: relative; /* Ganti menjadi relative agar posisi kotak terkait dengan center-box */
 }
 
 .black-line {
@@ -48,7 +47,7 @@ defineOptions({
   width: 100%;
   height: 2px;
   background-color: #000;
-  margin-top: 50vh;
+  margin-top: calc(50vh - 1px); /* Menyesuaikan posisi tengah vertikal */
   z-index: 1;
 }
 
@@ -60,19 +59,15 @@ defineOptions({
   border-radius: 5px;
   padding: 20px;
   z-index: 2; /* Mengatur kotak agar muncul di atas garis hitam */
-  margin-left: 720px;
 }
 
-.top-half {
-  height: 50%;
+.top-half,
+.bottom-half {
+  flex-grow: 1; /* Memastikan bagian atas dan bawah mengisi sisa ruang */
 }
 
 .bg-gray {
   background-color: #d9d9d9; /* Warna abu-abu */
-}
-
-.bottom-half {
-  height: 50%;
 }
 
 .bg-cream {
@@ -80,18 +75,33 @@ defineOptions({
 }
 
 .inner-circle {
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    background-color: #9A9A9A;
-    border: 2px solid #000;
-    border-radius: 50%;
-    left: calc(50% - 50px);
-    z-index: 3;
-    margin-top: -29vh;
-    margin-left: 41vh;
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  background-color: #9a9a9a;
+  border: 2px solid #000;
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin-top: calc(-20vh - 65px); /* Menyesuaikan posisi tengah vertikal */
 }
-#fontjudul{
-font-family: 'Inter', Arial, sans-serif;
+
+#fontjudul {
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Media queries untuk tampilan responsif */
+@media screen and (max-width: 700px) {
+  .box {
+    width: 80%; /* Mengubah lebar kotak menjadi responsif */
+    margin-top: 20px; /* Atur margin atas untuk jarak dari lingkaran */
+  }
+
+  .inner-circle {
+    width: 100px; /* Mengubah lebar lingkaran dalam kotak */
+    height: 100px; 
+    margin-top: calc(50vh - 595px);
+  }
 }
 </style>
