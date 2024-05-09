@@ -6,6 +6,7 @@ import { route } from 'quasar/wrappers';
   <p>rekap</p>
   <p>rekap</p>
   <p>rekap</p>
+  <p>tes</p>
 </template>
 
 <script>
